@@ -1,28 +1,44 @@
- <!DOCTYPE html> 
+ <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>검색폼 상단 중앙 정렬</title>
+  <title>검색엔진 상단 고정 + 본문</title>
   <style>
     html, body {
-      height: 100%;
       margin: 0;
       padding: 0;
+      width: 100%;
+      box-sizing: border-box;
     }
-    /* ★ 검색폼 전용 중앙정렬 */
+    /* 검색엔진 영역: 상단 고정 + 항상 중앙 */
     .search-form-center {
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      margin-top: 20px; /* 상단 여유 */
-      z-index: 10;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: #fff;
+      z-index: 100;
+      padding-top: 20px;
+      padding-bottom: 18px; /* 아래 공백 한 줄 효과 */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    /* 본문은 검색창 높이만큼 위에서 시작! */
+    .main-content {
+      margin-top: 88px; /* 검색폼+여백 만큼(수정가능) */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .blackowlwrap {
       padding: 5px 10px 10px 10px;
       border: 4px solid #3C3C8C;
       border-radius: 30px;
       display: inline-block;
+      background: #fff;
     }
     .blackowlselect { 
       border: none;
@@ -56,8 +72,10 @@
   </style>
 </head>
 <body>
+
+  <!-- 검색엔진 상단 고정 -->
   <div class="search-form-center">
-    <script language="JavaScript">
+    <script>
     // 검색엔진 설정 스크립트
     var MAX_ENGINES = 56;
     var SNARK_STRING = "hunting+the+snark";
@@ -89,8 +107,7 @@
     // 예시 엔진 추가
     Add("통합검색-네이버", "", "https://www.naver.com/", "https://search.naver.com/search.naver?query=hunting+the+snark");
     Add("통합검색-Google", "", "https://www.google.co.uk/", "https://www.google.co.uk/search?q=hunting+the+snark");
-    Add("통합검색-Google", "", "https://www.google.co.uk/", "https://www.google.co.uk/search?q=hunting+the+snark");
-    Add("통합검색-Google", "", "https://www.google.co.uk/", "https://www.google.co.uk/search?q=hunting+the+snark");
+    Add("통합검색-Daum", "", "https://www.daum.net/", "https://search.daum.net/search?q=hunting+the+snark");
     // 추가 엔진은 여기에 계속 Add(...) 하세요
 
     function HandleForm(form) {
@@ -123,9 +140,6 @@
     DisplayForm();
     </script>
   </div>
-</body>
-</html>
-
 
 <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
 
@@ -1564,3 +1578,6 @@
 </div>
 </div>
 <p><iframe frameborder="0" height="1" id="ga_target" scrolling="no" src="https://assets.tumblr.com/analytics.html?_v=9f5febfd57a8a649c598d888f2d9e062#https://stock7337.tumblr.com" width="1" style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: -webkit-center; background-color: transparent; overflow: hidden; position: absolute; top: 0px; left: 0px; z-index: 9999;"></iframe></p>
+
+</body>
+</html>
