@@ -2,43 +2,28 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>검색엔진 상단 고정 + 본문</title>
+  <title>상단고정 검색엔진 + 콘텐츠</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    /* 검색엔진 영역: 상단 고정 + 항상 중앙 */
-    .search-form-center {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+    /* 상단 고정 검색엔진 영역 */
+    .fixed-searchbar {
       position: fixed;
       top: 0;
       left: 0;
+      width: 100vw;
       background: #fff;
       z-index: 100;
-      padding-top: 20px;
-      padding-bottom: 18px; /* 아래 공백 한 줄 효과 */
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    /* 본문은 검색창 높이만큼 위에서 시작! */
-    .main-content {
-      margin-top: 130px; /* 검색폼+여백 만큼(수정가능) */
-      width: 100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 32px 0 32px 0;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
     }
+    /* 검색엔진 스타일 */
     .blackowlwrap {
       padding: 5px 10px 10px 10px;
       border: 4px solid #3C3C8C;
       border-radius: 30px;
       display: inline-block;
-      background: #fff;
     }
     .blackowlselect { 
       border: none;
@@ -65,88 +50,42 @@
       border: 0;
       outline: 0;
       box-shadow: none;
+      font-size: 18px;
     }
     .blackowlbutton:hover {
       background: #2E2E6C;
     }
+    /* 본문에 상단 패딩을 줘서 콘텐츠와 안 겹치게! */
+    .main-content {
+      padding-top: 120px; /* 이 값이 위 여백! 검색엔진 높이에 맞게 100~140px로 조절 */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
-
-  <!-- 검색엔진 상단 고정 -->
-  <div class="search-form-center">
-    <script>
-    // 검색엔진 설정 스크립트
-    var MAX_ENGINES = 56;
-    var SNARK_STRING = "hunting+the+snark";
-    function MakeArray(n) { for (var i = 1; i <= n; i++) this[i] = 0; this.maxlen = n; this.len = 0; return this; }
-    var engs = new MakeArray(MAX_ENGINES);
-    function find_substring(needle, haystack) {
-      var i, needlen = needle.length, haylen = haystack.length;
-      for (i = 0; i <= haylen - needlen; i++) {
-        if (needle == haystack.substring(i, i + needlen)) return i;
-      }
-      return false;
-    }
-    function Engine(name, opts, home, search) {
-      var snark = find_substring(SNARK_STRING, search);
-      this.name = name;
-      this.opts = opts;
-      this.home = home;
-      this.pre_snark = search.substring(0, snark);
-      this.post_snark = search.substring(snark + SNARK_STRING.length);
-    }
-    function Add(name, opts, home, search) {
-      engs.len++;
-      if (engs.len <= engs.maxlen) {
-        engs[engs.len] = new Engine(name, opts, home, search);
-      } else {
-        alert("Better increase MAX_ENGINES: " + engs.len + ">" + engs.maxlen);
-      }
-    }
-    // 예시 엔진 추가
-    Add("통합검색-네이버", "", "https://www.naver.com/", "https://search.naver.com/search.naver?query=hunting+the+snark");
-    Add("통합검색-Google", "", "https://www.google.co.uk/", "https://www.google.co.uk/search?q=hunting+the+snark");
-    Add("통합검색-Daum", "", "https://www.daum.net/", "https://search.daum.net/search?q=hunting+the+snark");
-    // 추가 엔진은 여기에 계속 Add(...) 하세요
-
-    function HandleForm(form) {
-      var oldq = form.query.value, newq = "", lastchar;
-      for (var i = 0; i < oldq.length; i++) {
-        var thischar = oldq.charAt(i);
-        if (thischar != ' ') newq += thischar;
-        else if (lastchar != ' ') newq += '+';
-        lastchar = thischar;
-      }
-      var eng = engs[1 + form.service.selectedIndex];
-      window.open(newq ? eng.pre_snark + newq + eng.post_snark : eng.home,
-                  'RemoteWindow','toolbar=1,location=1,status=1,menubar=1,scrollbars=1,resizable=1');
-    }
-
-    function DisplayForm() {
-      document.writeln('<form onsubmit="HandleForm(this); return false;">');
-      document.writeln('<div class="blackowlwrap">');
-      document.writeln('<select name="service" class="blackowlselect">');
-      for (var i = 1; i <= engs.len; i++) {
-        document.writeln('<option ' + engs[i].opts + '>' + engs[i].name + '</option>');
-      }
-      document.writeln('</select>');
-      document.writeln('<input size="44" name="query" class="blackowlinput" placeholder="검색어를 입력하세요">');
-      document.writeln('</div>');
-      document.writeln('<input type="submit" value="검색" class="blackowlbutton">');
-      document.writeln('</form>');
-    }
-    // 폼 출력
-    DisplayForm();
-    </script>
+  <!-- 상단 고정 검색엔진 -->
+  <div class="fixed-searchbar">
+    <form onsubmit="HandleForm(this); return false;" style="display: flex; align-items: center;">
+      <div class="blackowlwrap">
+        <select name="service" class="blackowlselect">
+          <option>통합검색-네이버</option>
+          <option>통합검색-Google</option>
+          <option>통합검색-Bing</option>
+          <!-- 추가 가능 -->
+        </select>
+        <input size="44" name="query" class="blackowlinput" placeholder="검색어를 입력하세요">
+      </div>
+      <input type="submit" value="검색" class="blackowlbutton" style="margin-left: 14px;">
+    </form>
   </div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
 
-<h2 style="margin: 0px; font-size: 18px; line-height: 20px; text-align: center; font-family: Helvetica, Arial, sans-serif;">.</h2>
+  <!-- 여기부터 본문(콘텐츠) -->
+  <div class="main-content">
+<p></p>
+<p></p>
 <table border="0" style="color: #444444; font-family: Helvetica, Arial, sans-serif; font-size: 11px;">
 <tbody>
 <tr>
@@ -177,7 +116,7 @@
 </div>
 </div>
 </div>
-<div class="shadow-line" style="box-sizing: border-box; padding: 0px; margin: 0px; max-width: 100%; text-align: center; vertical-align: top; overfllr.com/f5f06009df6584ebb5539cad61f73c63/tumblr_inline_qsghz3XZRQ1r45nlo_500.png" style="box-sizing: border-box; margin: 0px auto; padding: 0px; vertical-align: middle; display: block;" /></div>
+<div class="shadow-line" style="box-sizing: border-box; padding: 0px; margin: 0px; max-width: 100%; text-align: center; vertical-align: top; overflow: hidden !important;"><img class="__se_object" src="https://64.media.tumblr.com/f5f06009df6584ebb5539cad61f73c63/tumblr_inline_qsghz3XZRQ1r45nlo_500.png" style="box-sizing: border-box; margin: 0px auto; padding: 0px; vertical-align: middle; display: block;" /></div>
 <div class="list-details font-12 text-muted" style="box-sizing: border-box; color: #777777; padding: 0px 4.4px;">
 <div class="clearfix" style="box-sizing: border-box;"></div>
 </div>
@@ -801,14 +740,9 @@
 </tbody>
 </table>
 <p style="line-height: 19.25px; margin: 10px 0px 5px; font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: -webkit-center; padding: 0px;">.&hellip;</p>
-</div>
 
 
-
-
-
-
-<div class="posts " style="position: relative; margin: 25px auto; width: 1000px; font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: -webkit-center; background-color: #f9f9f9;">
+    <h2><div class="posts " style="position: relative; margin: 25px auto; width: 1000px; font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: -webkit-center; background-color: #f9f9f9;">
 <div class="post load" id="post_" style="float: left; position: relative; width: 1000px; padding: 20px; margin: 5px; background-color: #ffffff;">
 <table border="0">
 <tbody>
@@ -1581,6 +1515,22 @@
 </div>
 </div>
 <p><iframe frameborder="0" height="1" id="ga_target" scrolling="no" src="https://assets.tumblr.com/analytics.html?_v=9f5febfd57a8a649c598d888f2d9e062#https://stock7337.tumblr.com" width="1" style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-align: -webkit-center; background-color: transparent; overflow: hidden; position: absolute; top: 0px; left: 0px; z-index: 9999;"></iframe></p>
+  </div>
 
+  <script>
+    // 검색엔진 동작 (간단버전)
+    function HandleForm(form) {
+      var engines = [
+        {home: "https://www.naver.com/", search: "https://search.naver.com/search.naver?query="},
+        {home: "https://www.google.com/", search: "https://www.google.com/search?q="},
+        {home: "https://www.bing.com/", search: "https://www.bing.com/search?q="}
+      ];
+      var idx = form.service.selectedIndex;
+      var q = form.query.value.trim();
+      var eng = engines[idx];
+      var url = q ? (eng.search + encodeURIComponent(q)) : eng.home;
+      window.open(url, '_blank');
+    }
+  </script>
 </body>
 </html>
